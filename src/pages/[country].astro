@@ -1,0 +1,64 @@
+---
+import Layout from '../layouts/Layout.astro'
+import data from '../mocks/countries-data.json'
+
+export function getStaticPaths() {
+  const countries = data.map((country) => {
+    return {
+      name: country.name.common,
+      nativeName: country.name.nativeName,
+      population: country.population,
+      region: country.region,
+      flag: country.flags.png,
+      imageAlt: country.flags.alt,
+      flagSvg: country.flags.svg,
+      subregion: country.subregion,
+      capital: country.capital,
+      topLevelDomain: country.tld,
+      currencies: country.currencies,
+      languages: country.languages,
+      borders: country.borders,
+    }
+  })
+  return countries.map((country) => {
+    return {
+      params: { country: country.name },
+      props: { countryData: country },
+    }
+  })
+}
+
+const { country } = Astro.params
+const {
+  countryData: {
+    name,
+    nativeName,
+    population,
+    region,
+    flag,
+    flagSvg,
+    imageAlt,
+    subregion,
+    capital,
+    topLevelDomain,
+    currencies,
+    languages,
+    borders,
+  },
+} = Astro.props
+console.log()
+---
+
+<Layout title={country} icon={flagSvg}>
+  <main class="h-[90vh] mx-40 flex items-center">
+    <section class="w-full flex justify-between">
+      <img src={flag} alt={imageAlt} class="w-[450px]" />
+      <article>
+        <h1 class="text-4xl">{name}</h1>
+        <ul>
+          <li>Name</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+</Layout>
