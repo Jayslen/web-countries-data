@@ -1,4 +1,5 @@
 ---
+import CountryLi from '../components/CountryLi.astro'
 import Layout from '../layouts/Layout.astro'
 import data from '../mocks/countries-data.json'
 
@@ -9,10 +10,9 @@ export function getStaticPaths() {
       nativeName: country.name.nativeName,
       population: country.population,
       region: country.region,
-      flag: country.flags.png,
       imageAlt: country.flags.alt,
       flagSvg: country.flags.svg,
-      subregion: country.subregion,
+      subRegion: country.subregion,
       capital: country.capital,
       topLevelDomain: country.tld,
       currencies: country.currencies,
@@ -32,32 +32,67 @@ const { country } = Astro.params
 const {
   countryData: {
     name,
-    nativeName,
+    nativeName: countryNativeName,
     population,
     region,
-    flag,
     flagSvg,
     imageAlt,
-    subregion,
+    subRegion,
     capital,
     topLevelDomain,
     currencies,
-    languages,
-    borders,
+    languages: officialLanguages,
+    borders: officialBorders,
   },
 } = Astro.props
-console.log()
+const officialLanguageAcronym = Object.entries(officialLanguages).at(-1)[0]
+const nativeName = countryNativeName[officialLanguageAcronym].official
+const currency = Object.entries(currencies)[0][1].name
+const languages = Object.values(officialLanguages).join()
+const borders = officialBorders?.map(
+  (border) => data.find((country) => country.cca3 === border).name.common
+)
 ---
 
 <Layout title={country} icon={flagSvg}>
-  <main class="h-[90vh] mx-40 flex items-center">
-    <section class="w-full flex justify-between">
-      <img src={flag} alt={imageAlt} class="w-[450px]" />
-      <article>
-        <h1 class="text-4xl">{name}</h1>
-        <ul>
-          <li>Name</li>
+  <main class="mx-8 mb-4 lg:mx-52 lg:mb-0">
+    <a
+      href="/"
+      class="my-4 lg:my-14 inline-block bg-dark-text-light-elements-color dark:bg-dark-elements-color shadow-xl px-8 py-3 rounded"
+      >Go Back</a
+    >
+    <section class="lg:grid lg:grid-row lg:grid-cols-2">
+      <img
+        src={flagSvg}
+        alt={imageAlt}
+        class="w-full my-4 lg:h-[380px] lg:w-auto lg:my-0"
+      />
+      <article class="flex flex-col w-full">
+        <h1 class="text-4xl">{country}</h1>
+        <ul class="flex flex-row md:flex-col flex-wrap gap-3 h-[200px] my-4">
+          <CountryLi title="Native Name" text={nativeName} />
+          <CountryLi title="Population" text={population} />
+          <CountryLi title="Region" text={region} />
+          <CountryLi title="Sub Region" text={subRegion} />
+          <CountryLi title="Capital" text={capital[0]} />
+          <CountryLi title="Top level domain" text={topLevelDomain} />
+          <CountryLi title="Currency" text={currency} />
+          <CountryLi title="Languages:" text={languages} />
         </ul>
+        {
+          borders && (
+            <div class="w-full">
+              <h3 class="font-bold inline">Borders Countries :</h3>
+              <ul class="inline">
+                {borders.map((border) => (
+                  <li class="inline-block bg-dark-text-light-elements-color hover:bg-slate-200 dark:bg-dark-elements-color dark:hover:bg-dark-background-color transition-colors duration-300 shadow-xl px-4 py-1 m-1 rounded">
+                    <a href={`/${border}`}>{border}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
       </article>
     </section>
   </main>

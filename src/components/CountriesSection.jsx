@@ -13,14 +13,16 @@ const mapData = (country) => {
 }
 
 export function CountriesSection() {
-  const [countries, setCountries] = useState(data.map(mapData))
+  const [countries, setCountries] = useState(
+    data.map(mapData).sort((a, b) => a.name.localeCompare(b.name))
+  )
   const [continent, setContinent] = useState(null)
   const continents = ['All', 'Africa', 'Americas', 'Asia', 'Europe', 'Oceania']
 
   return (
     <>
       <form
-        className="flex justify-between"
+        className="flex flex-col gap-5 md:flex-row md:gap-0 md:justify-between"
         onSubmit={(e) => {
           e.preventDefault()
           const { search } = Object.fromEntries(new FormData(e.target))
@@ -38,7 +40,7 @@ export function CountriesSection() {
           type="text"
           placeholder="Search for a country"
           name="search"
-          className="bg-dark-text-light-elements-color dark:bg-dark-elements-color shadow-xl w-96 py-3 px-4 rounded-md"
+          className="bg-dark-text-light-elements-color dark:bg-dark-elements-color shadow-xl w-full md:w-96 py-3 px-4 rounded-md"
         />
         <div className="relative">
           <label
@@ -75,7 +77,13 @@ export function CountriesSection() {
         </div>
       </form>
       <section className="my-10">
-        <ul className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-x-24 gap-y-8">
+        <ul
+          className={`grid ${
+            countries.length < 4
+              ? 'grid-cols-4'
+              : 'grid-cols-[repeat(auto-fit,minmax(250px,1fr))]'
+          } gap-x-24 gap-y-8`}
+        >
           {countries.map((country, index) => (
             <li
               key={index}
