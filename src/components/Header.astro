@@ -16,16 +16,22 @@ import MoonIcon from './MoonIcon.astro'
   const $html = document.documentElement
   const $btn = document.getElementById('btn')
   const $span = $btn.querySelector('span')
-  const btnText = $html.classList.toggle('dark') ? 'Dark mode' : 'Light Mode'
+  const btnText = $html.classList.contains('dark') ? 'Dark mode' : 'Light Mode'
   $span.innerHTML = btnText
 
+  if (localStorage.theme === 'light') {
+    $html.classList.remove('dark')
+    $span.innerHTML = 'Light mode'
+  }
   $btn.addEventListener('click', () => {
     if ($html.classList.contains('dark')) {
-      $html.classList.toggle('dark')
-      $span.innerText = 'Dark mode'
+      $html.classList.remove('dark')
+      localStorage.theme = 'light'
+      $span.innerHTML = 'Light mode'
     } else {
-      $html.classList.toggle('dark')
-      $span.innerText = 'Light mode'
+      $html.classList.add('dark')
+      localStorage.theme = 'dark'
+      $span.innerHTML = 'Dark mode'
     }
   })
 </script>
