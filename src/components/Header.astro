@@ -7,7 +7,7 @@ import MoonIcon from './MoonIcon.astro'
 >
   <a href="/" class="text-sm md:text-xl font-black">Where in the world?</a>
   <button id="btn" class="flex gap-3 items-center">
-    <span class="text-sm md:text-md font-bold">Dark Mode</span>
+    <span class="text-sm md:text-md font-bold"></span>
     <MoonIcon />
   </button>
 </header>
@@ -15,14 +15,17 @@ import MoonIcon from './MoonIcon.astro'
 <script>
   const $html = document.documentElement
   const $btn = document.getElementById('btn')
-  if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    $html.classList.add('dark')
-  }
+  const $span = $btn.querySelector('span')
+  const btnText = $html.classList.toggle('dark') ? 'Dark mode' : 'Light Mode'
+  $span.innerHTML = btnText
+
   $btn.addEventListener('click', () => {
     if ($html.classList.contains('dark')) {
       $html.classList.toggle('dark')
+      $span.innerText = 'Dark mode'
     } else {
       $html.classList.toggle('dark')
+      $span.innerText = 'Light mode'
     }
   })
 </script>
