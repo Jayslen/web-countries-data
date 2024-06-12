@@ -37,7 +37,7 @@ const {
     flagSvg,
     imageAlt,
     subRegion,
-    capital,
+    capital: oficialCapital,
     topLevelDomain,
     currencies,
     languages: officialLanguages,
@@ -45,7 +45,9 @@ const {
   },
 } = Astro.props
 
-const nativeName = countryNativeName ? Object.values(countryNativeName) : null
+const nativeName = countryNativeName
+  ? Object.values(countryNativeName).at(-1).official
+  : null
 
 const currency = currencies ? Object.entries(currencies)[0][1].name : null
 const languages = officialLanguages
@@ -55,6 +57,7 @@ const borders = officialBorders?.map((border) => {
   const country = data?.find((country) => country.cca3 === border)
   return country ? country.name.common : null
 })
+const capital = oficialCapital ? Object.values(oficialCapital) : null
 ---
 
 <Layout title={country} icon={flagSvg}>
@@ -64,23 +67,23 @@ const borders = officialBorders?.map((border) => {
       class="my-4 lg:my-14 inline-block bg-dark-text-light-elements-color dark:bg-dark-elements-color shadow-xl px-8 py-3 rounded"
       >Go Back</a
     >
-    <section class="lg:grid lg:grid-row lg:grid-cols-2">
+    <section class="lg:grid lg:grid-row lg:grid-cols-2 lg:gap-5">
       <img
         src={flagSvg}
         alt={imageAlt}
-        class="w-full my-4 lg:h-[380px] lg:w-auto lg:my-0"
+        class="w-full my-4 lg:h-[350px] lg:w-auto lg:my-0"
       />
       <article class="flex flex-col w-full">
         <h1 class="text-4xl">{country}</h1>
         <ul class="flex flex-row md:flex-col flex-wrap gap-3 h-[200px] my-4">
-          <CountryLi title="Native Name" text={nativeName ?? 'none'} />
+          <CountryLi title="Native Name" text={nativeName ?? 'None'} />
           <CountryLi title="Population" text={population} />
           <CountryLi title="Region" text={region} />
-          <CountryLi title="Sub Region" text={subRegion} />
-          {capital && <CountryLi title="Capital" text={capital[0]} />}
+          <CountryLi title="Sub Region" text={subRegion ?? 'None'} />
+          <CountryLi title="Capital" text={capital ?? 'None'} />
           <CountryLi title="Top level domain" text={topLevelDomain} />
-          <CountryLi title="Currency" text={currency} />
-          <CountryLi title="Languages:" text={languages} />
+          <CountryLi title="Currency" text={currency ?? 'None'} />
+          <CountryLi title="Languages:" text={languages ?? 'None'} />
         </ul>
         {
           borders && (
