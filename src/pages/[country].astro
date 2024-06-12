@@ -31,7 +31,6 @@ export function getStaticPaths() {
 const { country } = Astro.params
 const {
   countryData: {
-    name,
     nativeName: countryNativeName,
     population,
     region,
@@ -46,12 +45,12 @@ const {
   },
 } = Astro.props
 
-const officialLanguageAcronym = officialLanguages
-  ? Object.entries(officialLanguages).at(-1)[0]
-  : null
-const nativeName = countryNativeName[officialLanguageAcronym].official
+const nativeName = countryNativeName ? Object.values(countryNativeName) : null
+
 const currency = currencies ? Object.entries(currencies)[0][1].name : null
-const languages = Object?.values(officialLanguages).join()
+const languages = officialLanguages
+  ? Object.values(officialLanguages).join()
+  : null
 const borders = officialBorders?.map((border) => {
   const country = data?.find((country) => country.cca3 === border)
   return country ? country.name.common : null
@@ -74,11 +73,11 @@ const borders = officialBorders?.map((border) => {
       <article class="flex flex-col w-full">
         <h1 class="text-4xl">{country}</h1>
         <ul class="flex flex-row md:flex-col flex-wrap gap-3 h-[200px] my-4">
-          <CountryLi title="Native Name" text={nativeName} />
+          <CountryLi title="Native Name" text={nativeName ?? 'none'} />
           <CountryLi title="Population" text={population} />
           <CountryLi title="Region" text={region} />
           <CountryLi title="Sub Region" text={subRegion} />
-          <CountryLi title="Capital" text={capital[0]} />
+          {capital && <CountryLi title="Capital" text={capital[0]} />}
           <CountryLi title="Top level domain" text={topLevelDomain} />
           <CountryLi title="Currency" text={currency} />
           <CountryLi title="Languages:" text={languages} />
