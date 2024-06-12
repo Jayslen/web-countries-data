@@ -45,13 +45,17 @@ const {
     borders: officialBorders,
   },
 } = Astro.props
-const officialLanguageAcronym = Object.entries(officialLanguages).at(-1)[0]
+
+const officialLanguageAcronym = officialLanguages
+  ? Object.entries(officialLanguages).at(-1)[0]
+  : null
 const nativeName = countryNativeName[officialLanguageAcronym].official
-const currency = Object.entries(currencies)[0][1].name
-const languages = Object.values(officialLanguages).join()
-const borders = officialBorders?.map(
-  (border) => data.find((country) => country.cca3 === border).name.common
-)
+const currency = currencies ? Object.entries(currencies)[0][1].name : null
+const languages = Object?.values(officialLanguages).join()
+const borders = officialBorders?.map((border) => {
+  const country = data?.find((country) => country.cca3 === border)
+  return country ? country.name.common : null
+})
 ---
 
 <Layout title={country} icon={flagSvg}>

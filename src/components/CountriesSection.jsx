@@ -76,6 +76,7 @@ export function CountriesSection() {
           </ul>
         </div>
       </form>
+      /
       <section className="my-10">
         <ul
           className={`grid ${
